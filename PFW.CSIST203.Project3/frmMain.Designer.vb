@@ -64,11 +64,11 @@ Partial Class frmMain
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(158, 48)
+        Me.Label1.Location = New System.Drawing.Point(178, 48)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(58, 13)
+        Me.Label1.Size = New System.Drawing.Size(18, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Excel Row"
+        Me.Label1.Text = "ID"
         '
         'btnPrevious
         '
@@ -247,7 +247,7 @@ Partial Class frmMain
         'OpenToolStripMenuItem
         '
         Me.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem"
-        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.OpenToolStripMenuItem.Size = New System.Drawing.Size(103, 22)
         Me.OpenToolStripMenuItem.Text = "Open"
         '
         'frmMain

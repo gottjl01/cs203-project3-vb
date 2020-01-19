@@ -183,7 +183,10 @@ Namespace PFW.CSIST203.Project3.Tests
 
                         AssertDelegateSuccess(
                             Sub()
-                                Assert.IsFalse(form.ValidateLength(form.txtFirstname), "The method should return false when a text box displays whitespace or empty text")
+                                Dim args = New System.ComponentModel.CancelEventArgs(False)
+                                form.canCancel = True
+                                form.TxtFirstname_Validating(form.txtFirstname, args)
+                                Assert.IsTrue(args.Cancel, "The method should return true when a text box displays whitespace or empty text")
                             End Sub,
                             "The method should not throw an exception")
 

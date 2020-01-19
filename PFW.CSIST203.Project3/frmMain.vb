@@ -1,6 +1,7 @@
 ﻿Public Class frmMain
 
     Friend persister As PFW.CSIST203.Project3.Persisters.IPersistData
+    Friend canCancel As Boolean = False
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         persister = New PFW.CSIST203.Project3.Persisters.Access.AccessPersister()
@@ -108,35 +109,49 @@
         End If
     End Sub
 
-    Friend Function ValidateLength(sender As Control) As Boolean
-        ' TODO: Implement
-        Return False
-    End Function
-
-    Private Sub KeyPress_Handler(sender As Object, e As KeyPressEventArgs) Handles txtFirstname.KeyPress, txtLastname.KeyPress, txtBusinessPhone.KeyPress, txtCompany.KeyPress, txtEmailAddress.KeyPress, txtTitle.KeyPress
-        Dim control = CType(sender, Control)
-        ValidateLength(control)
-    End Sub
-
     Private Sub BtnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
         Dim control = CType(sender, Control)
-        If ValidateLength(control) Then
+        Me.canCancel = True
 
-            ' retrieve the existing row from the persistent medium
-            Dim row = persister.GetRow(Integer.Parse(txtRow.Text.Trim()))
+        Try
 
-            ' change the column data of the row
-            row("First Name") = txtFirstname.Text
-            row("Last Name") = txtLastname.Text
-            row("E-mail Address") = txtEmailAddress.Text
-            row("Business Phone") = txtBusinessPhone.Text
-            row("Company") = txtCompany.Text
-            row("Job Title") = txtTitle.Text
+            If (ValidateChildren(ValidationConstraints.Enabled)) Then
 
-            ' propagate the row back to the persister for updating
-            persister.UpdateRow(row)
+                ' retrieve the existing row from the persistent medium
+                Dim row = persister.GetRow(Integer.Parse(Me.txtRow.Text.Trim()))
 
+                ' change the column data of the row
+                row("First Name") = txtFirstname.Text
+                row("Last Name") = txtLastname.Text
+                row("E-mail Address") = txtEmailAddress.Text
+                row("Business Phone") = txtBusinessPhone.Text
+                row("Company") = txtCompany.Text
+                row("Job Title") = txtTitle.Text
+
+                ' propagate the row back to the persister for updating
+                persister.UpdateRow(row)
+
+            End If
+
+        Catch
+            Throw
+        Finally
+            Me.canCancel = False
+        End Try
+
+    End Sub
+
+    Friend Sub TxtFirstname_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtTitle.Validating, txtLastname.Validating, txtFirstname.Validating, txtEmailAddress.Validating, txtCompany.Validating, txtBusinessPhone.Validating
+
+        Dim control = CType(sender, Control)
+        If String.IsNullOrWhiteSpace(control.Text) Then
+            If canCancel Then
+                e.Cancel = True
+            End If
+            ErrorProvider.SetError(control, "Value must be non-whitespace and non-empty")
+        Else
+            ErrorProvider.SetError(control, String.Empty)
         End If
 
     End Sub
